@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addItem } from "../../store/cartSlice";
 import { addToWishlist } from "../../store/wishlistSlice";
 
@@ -9,6 +9,9 @@ function UserHome() {
   const [products, setProducts] = useState([])
   const navigate = useNavigate();
   let dispatch = useDispatch();
+  const wishlistItems = useSelector(
+  (state) => state.wishlist.items
+);
   const [search, setSearch] = useState("");
   async function getData() {
     let res = await axios.get("https://fakestoreapi.com/products")
@@ -62,7 +65,13 @@ function UserHome() {
         />
       </div>
       <div className="product-container">
-        {filteredProducts.map((item) => (
+      {filteredProducts.map((item) => {
+
+  const isWishlisted = wishlistItems.some(
+    (wishItem) => wishItem.id === item.id
+  );
+
+  return (
           <div className="card" key={item.id}>
 
             <img src={item.image} alt="" />
@@ -119,16 +128,21 @@ function UserHome() {
               Add to cart
             </button>
 
-            <button 
-            style={{
-               background: "linear-gradient(to right, #04090B, #DEC5B1)"
-            }}
+            <button
+              style={{
+                backgroundColor: isWishlisted ? "#e91e63" : "#DEC5B1",
+                color: isWishlisted ? "#fff" : "#04090B",
+                border: "none",
+                padding: "10px",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
               onClick={() => {
                 dispatch(addToWishlist(item));
-                alert("Added to Wishlist");
               }}
             >
-              ❤️ Wishlist
+              {isWishlisted ? "❤️ Wishlisted" : "🤍 Wishlist"}
             </button>
 
             <button
@@ -138,8 +152,12 @@ function UserHome() {
             >
               Open
             </button>
-          </div>
-        ))}
+         
+       </div>
+  );
+})}
+
+
       </div>
     </div>
 

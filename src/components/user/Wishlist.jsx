@@ -162,8 +162,8 @@ function Wishlist() {
                 <Button
                     variant="outlined"
                     sx={{
-                        borderColor: "#04090B",
-                        color: "#04090B",
+                        borderColor: "#DEC5B1",
+                        color: "#DEC5B1",
                         px: 4,
                         py: 1,
                         fontWeight: "bold",
